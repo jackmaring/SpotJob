@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "321395076173",
+    "firebase_url": "https://spotjob-5923f.firebaseio.com",
+    "project_id": "spotjob-5923f",
+    "storage_bucket": "spotjob-5923f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321395076173:android:43210ffae8d1c4a278c004",
+        "android_client_info": {
+          "package_name": "io.spotjob.spotjob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321395076173-kkc2mhkvo0fom3v1vllsjmhcfvpsalab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV85ihY-zzwHD3jn2M4zdHgH37Nqy2qFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321395076173-kkc2mhkvo0fom3v1vllsjmhcfvpsalab.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321395076173-s120944hqkum7bnl0ffgj1i702q6kfvi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.spotjob.spotjob"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
