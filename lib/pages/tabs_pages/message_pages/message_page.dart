@@ -5,6 +5,7 @@ import 'package:spotjob/models/chat.dart';
 import 'package:spotjob/models/user.dart';
 import 'package:spotjob/services/crud_models/chat_crud_model.dart';
 import 'package:spotjob/services/update_methods/chat_update_methods.dart';
+import 'package:spotjob/services/update_methods/sjnotification_update_methods.dart';
 import 'package:spotjob/styles/custom_colors.dart';
 import 'package:spotjob/utils/top_methods/user_top_methods.dart';
 import 'package:spotjob/widgets/common/back_arrow_appbar.dart';
@@ -105,21 +106,15 @@ class _MessagePageState extends State<MessagePage> {
                           size: 30,
                         ),
                         onTap: () {
-                          ChatUpdateMethods.createMessage(
-                            messageContent: _message,
-                            messageType: MessageType.text,
-                            currentUser: currentUserDoc,
-                            chat: currentChat,
-                          ).then(
-                            (newMessage) => ChatUpdateMethods.updateChat(
+                          if (_message != null && _message != null) {
+                            ChatUpdateMethods.sendMessage(
+                              _message,
                               currentChat,
-                              newMessage,
                               currentUserDoc,
                               otherUser,
-                            ),
-                          );
-                          _message = '';
-                          messageController.clear();
+                              messageController,
+                            );
+                          }
                         },
                       ),
                     ],

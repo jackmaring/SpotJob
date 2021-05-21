@@ -1,7 +1,11 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spotjob/models/user.dart';
+import 'package:spotjob/pages/home_pages/notifications_page.dart';
+import 'package:spotjob/pages/home_pages/settings_page.dart';
 import 'package:spotjob/pages/profile_pages/profile_page.dart';
 import 'package:spotjob/styles/custom_colors.dart';
 import 'package:spotjob/widgets/common/notification_bubble.dart';
@@ -70,7 +74,9 @@ class TabsHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, NotificationsPage.routeName);
+                },
               ),
               SizedBox(width: 24),
               GestureDetector(
@@ -79,7 +85,9 @@ class TabsHeader extends StatelessWidget {
                   size: 25,
                   color: CustomColors.darkGray,
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, SettingsPage.routeName);
+                },
               ),
             ],
           ),

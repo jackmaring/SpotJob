@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/providers/create_job.dart';
 import 'package:spotjob/services/crud_models/job_crud_model.dart';
 import 'package:spotjob/services/update_methods/job_update_methods.dart';
@@ -15,16 +14,18 @@ import 'package:spotjob/widgets/new_job_page_widgets/add_job_location_type.dart'
 import 'package:spotjob/widgets/new_job_page_widgets/add_job_price.dart';
 import 'package:spotjob/widgets/new_job_page_widgets/add_job_tags.dart';
 import 'package:spotjob/widgets/new_job_page_widgets/add_job_title.dart';
+import 'package:spotjob/widgets/new_job_page_widgets/bullshit_button_that_makes_no_sense.dart';
 
-class NewJobPage extends StatelessWidget {
+class NewJobPage extends StatefulWidget {
   static const routeName = '/new-job';
-  final jobCrud = JobCRUD();
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  // final TextEditingController numOfPeopleController = TextEditingController();
+  @override
+  _NewJobPageState createState() => _NewJobPageState();
+}
+
+class _NewJobPageState extends State<NewJobPage> {
+  final jobCrud = JobCRUD();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,38 +48,56 @@ class NewJobPage extends StatelessWidget {
                   BigText('CREATE JOB'),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: 32),
-                        AddJobTitle(titleController),
-                        SizedBox(height: 32),
-                        AddJobDescription(descController),
-                        // SizedBox(height: 32),
-                        // SelectPayType(),
-                        SizedBox(height: 32),
-                        AddJobPrice(priceController),
-                        SizedBox(height: 32),
-                        SelectLocationType(),
-                        AddJobAddress(addressController),
-                        // SizedBox(height: 32),
-                        // AddJobNumOfPeople(numOfPeopleController),
-                        SizedBox(height: 32),
-                        AddJobTags(),
-                        SizedBox(height: 32),
-                        LongBlueButton(
-                          text: 'Create Job',
-                          onTap: () {
-                            JobUpdateMethods.createJob(
-                              createJobProvider,
-                              currentUserDoc,
-                            );
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, TabsPage.routeName, (route) => false);
-                          },
+                    child: Form(
+                      key: _formKey,
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 32),
+                            AddJobTitle(),
+                            SizedBox(height: 32),
+                            AddJobDescription(),
+                            SizedBox(height: 32),
+                            // SelectPayType(),
+                            // SizedBox(height: 32),
+                            AddJobPrice(),
+                            SizedBox(height: 32),
+                            SelectLocationType(),
+                            AddJobAddress(),
+                            // SizedBox(height: 32),
+                            // AddJobNumOfPeople(numOfPeopleController),
+                            SizedBox(height: 32),
+                            AddJobTags(),
+                            SizedBox(height: 32),
+                            LongBlueButton(
+                              text: 'Create Job',
+                              onTap: () {
+                                BullshitButtonThatMakesNoSense(
+                                  _formKey,
+                                  createJobProvider,
+                                  currentUserDoc,
+                                );
+                                if (createJobProvider.tags.isEmpty) {
+                                  final snackBar = SnackBar(
+                                    content: Text('Please choose some tags!'),
+                                  );
+                                  Scaffold.of(context).showSnackBar(snackBar);
+                                } else {
+                                  if (_formKey.currentState.validate()) {
+                                    JobUpdateMethods.createJob(
+                                      context,
+                                      createJobProvider,
+                                      currentUserDoc,
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                            SizedBox(height: 48),
+                          ],
                         ),
-                        SizedBox(height: 48),
-                      ],
+                      ),
                     ),
                   ),
                 ],

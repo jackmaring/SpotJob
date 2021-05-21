@@ -22,8 +22,7 @@ class AddUserBio extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: TextField(
-            // controller: controller,
-            controller: controller..text = createUserProvider.bio,
+            controller: controller,
             onChanged: (value) {
               createUserProvider.bio = value;
             },

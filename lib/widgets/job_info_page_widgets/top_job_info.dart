@@ -24,6 +24,9 @@ class TopJobInfo extends StatelessWidget {
     final createJobProvider = Provider.of<CreateJob>(context);
     final Job updatedJob = createJobProvider.updatedJob;
 
+    print(relevantJob.title);
+    print(relevantJob.pay);
+
     return (currentUserDoc != null && relevantUser != null)
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

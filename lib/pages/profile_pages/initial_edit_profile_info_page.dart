@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotjob/models/user.dart';
-import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/providers/create_user.dart';
 import 'package:spotjob/services/crud_models/user_crud_model.dart';
 import 'package:spotjob/services/update_methods/user_update_methods.dart';
@@ -63,11 +62,11 @@ class InitialEditProfileInfoPage extends StatelessWidget {
                         LongBlueButton(
                           text: 'Create Profile',
                           onTap: () async {
-                            await UserUpdateMethods.editUserProfile(
+                            UserUpdateMethods.updateInitialProfile(
+                              context,
                               createUserProvider,
                               currentUserDoc,
                             );
-                            Navigator.pushNamed(context, TabsPage.routeName);
                           },
                         ),
                         SizedBox(height: 48),

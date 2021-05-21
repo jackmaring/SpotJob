@@ -7,7 +7,7 @@ import 'package:spotjob/providers/create_job.dart';
 class AddJobAddress extends StatelessWidget {
   final TextEditingController addressController;
 
-  AddJobAddress(this.addressController);
+  AddJobAddress({this.addressController});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,19 @@ class AddJobAddress extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0),
-                  child: TextField(
+                  child: TextFormField(
                     keyboardType: TextInputType.number,
-                    controller: addressController
-                      ..text = createJobProvider.address,
+                    controller: addressController,
                     onChanged: (value) {
                       createJobProvider.address = value;
                     },
                     style: Theme.of(context).textTheme.headline5,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Title required';
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ],

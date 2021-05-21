@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spotjob/models/user.dart';
-import 'package:spotjob/pages/home_pages/settings_page.dart';
+import 'package:spotjob/pages/tabs_pages/wallet_page.dart';
 import 'package:spotjob/pages/tabs_pages/homepage.dart';
 import 'package:spotjob/pages/tabs_pages/job_lists_page.dart';
 import 'package:spotjob/pages/tabs_pages/message_pages/message_landing_page.dart';
@@ -52,7 +52,7 @@ class _TabsPageState extends State<TabsPage>
         'title': 'Messages',
       },
       {
-        'page': SettingsPage(),
+        'page': WalletPage(),
         'title': 'Settings',
       },
     ];

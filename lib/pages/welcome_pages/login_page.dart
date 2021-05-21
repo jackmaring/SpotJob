@@ -161,8 +161,7 @@ class _LoginInPageState extends State<LoginInPage> {
                                     // Navigator.of(context)
                                     //     .pushNamed(TabsPage.routeName);
                                     if (_formKey.currentState.validate()) {
-                                      AuthService()
-                                          .signIn(_email, _password)
+                                      AuthService.signIn(_email, _password)
                                           .then((result) {
                                         Navigator.of(context)
                                             .pushNamed(TabsPage.routeName);

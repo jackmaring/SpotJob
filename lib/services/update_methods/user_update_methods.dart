@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:spotjob/models/job.dart';
 
 import 'package:spotjob/models/user.dart';
+import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/providers/create_user.dart';
 import 'package:spotjob/services/crud_models/user_crud_model.dart';
 import 'package:spotjob/services/file_uploader.dart';
@@ -21,7 +23,8 @@ class UserUpdateMethods {
     );
   }
 
-  static Future<User> editUserProfile(CreateUser createUser, User userDoc) async {
+  static Future<User> editUserProfile(
+      CreateUser createUser, User userDoc) async {
     UserCRUD userCrud = UserCRUD();
     String profilePicUrl;
 
@@ -48,6 +51,7 @@ class UserUpdateMethods {
       savedJobs: userDoc.savedJobs,
       appliedJobs: userDoc.appliedJobs,
       jobsInProgress: userDoc.jobsInProgress,
+      token: userDoc.token,
       dateCreated: userDoc.dateCreated,
     );
 
@@ -68,6 +72,25 @@ class UserUpdateMethods {
       },
     );
     return downloadUrl;
+  }
+
+  static void updateProfile(
+      BuildContext context, CreateUser createUser, User user) async {
+    User updatedUser = await UserUpdateMethods.editUserProfile(
+      createUser,
+      user,
+    );
+    createUser.updatedUser = updatedUser;
+    Navigator.pop(context);
+  }
+
+  static void updateInitialProfile(
+      BuildContext context, CreateUser createUser, User user) async {
+    await UserUpdateMethods.editUserProfile(
+      createUser,
+      user,
+    );
+    Navigator.pushNamed(context, TabsPage.routeName);
   }
 
   static void toggleSaveJob(User userDoc, Job jobDoc) {
@@ -99,6 +122,7 @@ class UserUpdateMethods {
         savedJobs: savedJobs,
         appliedJobs: userDoc.appliedJobs,
         jobsInProgress: userDoc.jobsInProgress,
+        token: userDoc.token,
         dateCreated: userDoc.dateCreated,
       ),
     );
@@ -133,6 +157,7 @@ class UserUpdateMethods {
         savedJobs: userDoc.savedJobs,
         appliedJobs: appliedForJobs,
         jobsInProgress: userDoc.jobsInProgress,
+        token: userDoc.token,
         dateCreated: userDoc.dateCreated,
       ),
     );
@@ -167,6 +192,7 @@ class UserUpdateMethods {
         savedJobs: userDoc.savedJobs,
         appliedJobs: userDoc.appliedJobs,
         jobsInProgress: userDoc.jobsInProgress,
+        token: userDoc.token,
         dateCreated: userDoc.dateCreated,
       ),
     );
@@ -201,6 +227,7 @@ class UserUpdateMethods {
         savedJobs: userDoc.savedJobs,
         appliedJobs: userDoc.appliedJobs,
         jobsInProgress: userDoc.jobsInProgress,
+        token: userDoc.token,
         dateCreated: userDoc.dateCreated,
       ),
     );
@@ -235,6 +262,7 @@ class UserUpdateMethods {
         savedJobs: userDoc.savedJobs,
         appliedJobs: userDoc.appliedJobs,
         jobsInProgress: userDoc.jobsInProgress,
+        token: userDoc.token,
         dateCreated: userDoc.dateCreated,
       ),
     );
@@ -269,6 +297,7 @@ class UserUpdateMethods {
         savedJobs: userDoc.savedJobs,
         appliedJobs: userDoc.appliedJobs,
         jobsInProgress: userJobsInProgress,
+        token: userDoc.token,
         dateCreated: userDoc.dateCreated,
       ),
     );
@@ -303,6 +332,34 @@ class UserUpdateMethods {
         savedJobs: userDoc.savedJobs,
         appliedJobs: userDoc.appliedJobs,
         jobsInProgress: userDoc.jobsInProgress,
+        token: userDoc.token,
+        dateCreated: userDoc.dateCreated,
+      ),
+    );
+  }
+
+  static void saveToken(User userDoc, String token) {
+    UserCRUD userCrud = UserCRUD();
+    userCrud.updateUser(
+      User(
+        id: userDoc.id,
+        uid: userDoc.uid,
+        email: userDoc.email,
+        username: userDoc.username,
+        profilePic: userDoc.profilePic,
+        name: userDoc.name,
+        title: userDoc.title,
+        bio: userDoc.bio,
+        certifications: userDoc.certifications,
+        skills: userDoc.skills,
+        connections: userDoc.connections,
+        blockedUsers: userDoc.blockedUsers,
+        jobsCompleted: userDoc.jobsCompleted,
+        jobsPosted: userDoc.jobsPosted,
+        savedJobs: userDoc.savedJobs,
+        appliedJobs: userDoc.appliedJobs,
+        jobsInProgress: userDoc.jobsInProgress,
+        token: token,
         dateCreated: userDoc.dateCreated,
       ),
     );

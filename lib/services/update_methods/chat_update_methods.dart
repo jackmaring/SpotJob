@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import 'package:spotjob/models/chat.dart';
 import 'package:spotjob/models/user.dart';
 import 'package:spotjob/services/crud_models/chat_crud_model.dart';
+import 'package:spotjob/services/update_methods/sjnotification_update_methods.dart';
 
 class ChatUpdateMethods {
   static Future<Chat> createChat({List<String> userIds}) async {
@@ -64,6 +66,7 @@ class ChatUpdateMethods {
       content: messageContent,
       messageType: messageType,
       messageStatus: MessageStatus.unread,
+      chatId: chat.id,
       dateCreated: Timestamp.now(),
     );
 
@@ -72,6 +75,30 @@ class ChatUpdateMethods {
         );
 
     return newMessage;
+  }
+
+  static void sendMessage(String message, Chat chat, User currentUser,
+      User otherUser, TextEditingController controller) {
+    ChatUpdateMethods.createMessage(
+      messageContent: message,
+      messageType: MessageType.text,
+      currentUser: currentUser,
+      chat: chat,
+    ).then((newMessage) {
+      ChatUpdateMethods.updateChat(
+        chat,
+        newMessage,
+        currentUser,
+        otherUser,
+      );
+      SJNotificationUpdateMethods.createMessageNotification(
+        senderUser: currentUser,
+        acceptorUser: otherUser,
+        message: newMessage,
+      );
+    });
+    message = '';
+    controller.clear();
   }
 
   static void makeMessageRead(Chat chat, Message message) {
@@ -84,6 +111,7 @@ class ChatUpdateMethods {
         content: message.content,
         messageType: message.messageType,
         messageStatus: MessageStatus.read,
+        chatId: message.chatId,
         dateCreated: message.dateCreated,
       ),
     );

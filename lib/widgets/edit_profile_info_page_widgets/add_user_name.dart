@@ -21,7 +21,7 @@ class AddUserName extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: TextField(
-            controller: controller..text = createUserProvider.name,
+            controller: controller,
             onChanged: (value) {
               createUserProvider.name = value;
             },

@@ -12,9 +12,9 @@ class ChangeCategory with ChangeNotifier {
   // PayType _filterPayType = PayType.oneTime;
   double _filterPayRangeLowerValue = 0;
   double _filterPayRangeUpperValue = 200;
-  bool _anyPay = false;
+  bool _anyPay = true;
   LocationType _filterLocationType = LocationType.location;
-  bool _anyLocationType = false;
+  bool _anyLocationType = true;
   List<String> _filterTags = [];
   bool _hasSetCustomFilter = false;
 

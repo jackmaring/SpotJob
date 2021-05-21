@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotjob/models/job.dart';
+import 'package:spotjob/models/sj_notification.dart';
 import 'package:spotjob/models/user.dart';
 import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/providers/create_job.dart';
 import 'package:spotjob/services/update_methods/job_update_methods.dart';
+import 'package:spotjob/services/update_methods/sjnotification_update_methods.dart';
 import 'package:spotjob/services/update_methods/user_update_methods.dart';
 import 'package:spotjob/utils/top_methods/job_top_methods.dart';
 import 'package:spotjob/utils/top_methods/user_top_methods.dart';
@@ -98,18 +100,12 @@ class TakeRequestsPage extends StatelessWidget {
                     ? LongWhiteButton(
                         text: 'Confirm',
                         onTap: () {
-                          JobUpdateMethods.toggleJobInProgress(relevantJob);
-                          UserUpdateMethods.toggleUserJobInProgress(
-                              currentUserDoc, relevantJob);
-                          UserUpdateMethods.toggleUserJobInProgress(
-                              createJobProvider.personAccepted, relevantJob);
-                          // createJobProvider.peopleAccepted.forEach(
-                          //   (personAccepted) =>
-                          //       UserUpdateMethods.toggleUserJobInProgress(
-                          //           personAccepted, relevantJob),
-                          // );
-                          createJobProvider.resetCreateJobStats();
-                          Navigator.pushNamed(context, TabsPage.routeName);
+                          JobUpdateMethods.confirmTakeRequest(
+                            context,
+                            createJobProvider,
+                            relevantJob,
+                            currentUserDoc,
+                          );
                         },
                       )
                     : Container(height: 50),

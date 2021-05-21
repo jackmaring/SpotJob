@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 
 import 'package:spotjob/models/job.dart';
 import 'package:spotjob/models/user.dart';
+import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
+import 'package:spotjob/providers/change_category.dart';
 import 'package:spotjob/providers/create_job.dart';
 import 'package:spotjob/services/crud_models/job_crud_model.dart';
+import 'package:spotjob/services/update_methods/sjnotification_update_methods.dart';
 import 'package:spotjob/services/update_methods/user_update_methods.dart';
 import 'package:spotjob/utils/top_methods/job_top_methods.dart';
 
 class JobUpdateMethods {
-  static void createJob(CreateJob createJob, User currentUser) {
+  static void createJob(
+      BuildContext context, CreateJob createJob, User currentUser) {
     JobCRUD jobCrud = JobCRUD();
     jobCrud
         .addJob(
@@ -36,6 +40,8 @@ class JobUpdateMethods {
       );
     });
     createJob.resetCreateJobStats();
+    Navigator.pushNamedAndRemoveUntil(
+        context, TabsPage.routeName, (route) => false);
   }
 
   static Future<Job> updateJobInfo(CreateJob createJob, Job job) async {
@@ -157,10 +163,52 @@ class JobUpdateMethods {
     JobUpdateMethods.toggleJobInProgress(job);
   }
 
-  static void deleteJob(CreateJob createJob, User currentUser, Job job) {
+  static void editJob(
+      BuildContext context, CreateJob createJob, Job job) async {
+    Job updatedJob = await JobUpdateMethods.updateJobInfo(createJob, job);
+    createJob.updatedJob = updatedJob;
+    Navigator.pop(context);
+  }
+
+  static void deleteJob(
+      BuildContext context, CreateJob createJob, User currentUser, Job job) {
     JobCRUD jobCrud = JobCRUD();
     jobCrud.removeJob(job.id);
     createJob.resetCreateJobStats();
     UserUpdateMethods.toggleJobPosted(currentUser, job);
+    Navigator.pushNamedAndRemoveUntil(
+        context, TabsPage.routeName, (route) => false);
+  }
+
+  static void applyCustomFilter(
+      BuildContext context, ChangeCategory changeCategory) {
+    changeCategory.changeToCustomFilter();
+    Navigator.pushNamedAndRemoveUntil(
+        context, TabsPage.routeName, (route) => false);
+  }
+
+  static void confirmTakeRequest(
+      BuildContext context, CreateJob createJob, Job job, User currentUser) {
+    toggleJobInProgress(job);
+    UserUpdateMethods.toggleUserJobInProgress(
+      currentUser,
+      job,
+    );
+    UserUpdateMethods.toggleUserJobInProgress(
+      createJob.personAccepted,
+      job,
+    );
+    // createJobProvider.peopleAccepted.forEach(
+    //   (personAccepted) =>
+    //       UserUpdateMethods.toggleUserJobInProgress(
+    //           personAccepted, relevantJob),
+    // );
+    SJNotificationUpdateMethods.createTakeRequestConfirmationNotification(
+      posterUser: currentUser,
+      takerUser: createJob.personAccepted,
+      job: job,
+    );
+    createJob.resetCreateJobStats();
+    Navigator.pushNamed(context, TabsPage.routeName);
   }
 }

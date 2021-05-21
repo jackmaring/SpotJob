@@ -6,11 +6,12 @@ import 'package:spotjob/providers/create_job.dart';
 class AddJobTitle extends StatelessWidget {
   final TextEditingController titleController;
 
-  AddJobTitle(this.titleController);
+  AddJobTitle({this.titleController});
 
   @override
   Widget build(BuildContext context) {
     final createJobProvider = Provider.of<CreateJob>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -20,12 +21,18 @@ class AddJobTitle extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
-          child: TextField(
-            controller: titleController..text = createJobProvider.titleText,
+          child: TextFormField(
+            controller: titleController,
             onChanged: (value) {
               createJobProvider.titleText = value;
             },
             style: Theme.of(context).textTheme.headline5,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Title required';
+              }
+              return null;
+            },
           ),
         ),
       ],

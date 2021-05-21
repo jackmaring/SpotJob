@@ -6,6 +6,7 @@ import 'package:spotjob/pages/job_pages/take_requests_page.dart';
 import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/services/crud_models/user_crud_model.dart';
 import 'package:spotjob/services/update_methods/job_update_methods.dart';
+import 'package:spotjob/services/update_methods/sjnotification_update_methods.dart';
 import 'package:spotjob/services/update_methods/user_update_methods.dart';
 import 'package:spotjob/utils/top_methods/job_top_methods.dart';
 import 'package:spotjob/widgets/common/blue_button.dart';
@@ -35,10 +36,17 @@ class ApplyForJobButton extends StatelessWidget {
             ? relevantJob.isInProgress
                 ? InProgressButton(
                     onTap: () {
-                      final User takerUser = JobTopMethods.getJobTakerInProgress(
-                          context, relevantJob);
+                      final User takerUser =
+                          JobTopMethods.getJobTakerInProgress(
+                              context, relevantJob);
                       JobUpdateMethods.completeJobAndUpdateUsers(
                         context: context,
+                        posterUser: relevantUser,
+                        takerUser: takerUser,
+                        job: relevantJob,
+                      );
+                      SJNotificationUpdateMethods
+                          .createPosterUserCompletedJobNotification(
                         posterUser: relevantUser,
                         takerUser: takerUser,
                         job: relevantJob,
@@ -66,6 +74,12 @@ class ApplyForJobButton extends StatelessWidget {
                             takerUser: currentUserDoc,
                             job: relevantJob,
                           );
+                          SJNotificationUpdateMethods
+                              .createTakerUserCompletedJobNotification(
+                            posterUser: relevantUser,
+                            takerUser: currentUserDoc,
+                            job: relevantJob,
+                          );
                           // routes back to tabs page
                           Navigator.pushNamed(context, TabsPage.routeName);
                         },
@@ -75,6 +89,12 @@ class ApplyForJobButton extends StatelessWidget {
                         text: 'CANCEL',
                         onTap: () {
                           JobUpdateMethods.cancelJob(
+                            posterUser: relevantUser,
+                            takerUser: currentUserDoc,
+                            job: relevantJob,
+                          );
+                          SJNotificationUpdateMethods
+                              .createUserCancelledJobNotification(
                             posterUser: relevantUser,
                             takerUser: currentUserDoc,
                             job: relevantJob,
@@ -95,10 +115,18 @@ class ApplyForJobButton extends StatelessWidget {
                       )
                     : BlueButton(
                         text: 'TAKE ON',
-                        onTap: () => UserUpdateMethods.toggleApplyForJob(
-                          currentUserDoc,
-                          relevantJob,
-                        ),
+                        onTap: () {
+                          UserUpdateMethods.toggleApplyForJob(
+                            currentUserDoc,
+                            relevantJob,
+                          );
+                          SJNotificationUpdateMethods
+                              .createApplicationNotification(
+                            posterUser: relevantUser,
+                            takerUser: currentUserDoc,
+                            job: relevantJob,
+                          );
+                        },
                       )
         : BlueButton(
             text: 'INFO',

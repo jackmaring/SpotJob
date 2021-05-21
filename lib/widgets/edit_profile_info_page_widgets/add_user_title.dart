@@ -22,7 +22,7 @@ class AddUserTitle extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: TextField(
-            controller: controller..text = createUserProvider.title,
+            controller: controller,
             onChanged: (value) {
               createUserProvider.title = value;
             },

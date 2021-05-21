@@ -63,9 +63,11 @@ class User {
   List<String> blockedUsers;
   List<String> jobsCompleted;
   List<String> jobsPosted;
+  // I wanna make saved and applied jobs be on the job model in the future
   List<String> savedJobs;
   List<String> appliedJobs;
   List<String> jobsInProgress;
+  String token;
   Timestamp dateCreated;
 
   User({
@@ -86,6 +88,7 @@ class User {
     this.savedJobs,
     this.appliedJobs,
     this.jobsInProgress,
+    this.token,
     this.dateCreated,
   });
 
@@ -113,6 +116,7 @@ class User {
           savedJobs: data['savedJobs'].cast<String>(),
           appliedJobs: data['appliedJobs'].cast<String>(),
           jobsInProgress: data['jobsInProgress'].cast<String>(),
+          token: data['token'],
           dateCreated: data['dateCreated'],
         );
 
@@ -136,6 +140,7 @@ class User {
         'savedJobs': savedJobs ?? [],
         'appliedJobs': appliedJobs ?? [],
         'jobsInProgress': jobsInProgress ?? [],
+        'token': token ?? '',
         'dateCreated': dateCreated,
       };
 }

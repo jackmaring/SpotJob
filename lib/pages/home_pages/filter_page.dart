@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/providers/change_category.dart';
+import 'package:spotjob/services/update_methods/job_update_methods.dart';
 import 'package:spotjob/styles/custom_colors.dart';
 import 'package:spotjob/widgets/common/back_arrow_appbar.dart';
 import 'package:spotjob/widgets/common/big_text.dart';
@@ -51,9 +52,10 @@ class FilterPage extends StatelessWidget {
                   LongBlueButton(
                     text: 'Apply Filter',
                     onTap: () {
-                      changeCategoryProvider.changeToCustomFilter();
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, TabsPage.routeName, (route) => false);
+                      JobUpdateMethods.applyCustomFilter(
+                        context,
+                        changeCategoryProvider,
+                      );
                     },
                   ),
                   SizedBox(height: 48),

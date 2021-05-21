@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 import 'package:spotjob/models/chat.dart';
 import 'package:spotjob/services/firestore_api.dart';
 
-class ChatCRUD extends ChangeNotifier {
+class ChatCRUD {
   FirestoreApi _api = FirestoreApi('/chats');
 
   // Future<List<Chat>> fetchChats() async {
@@ -16,8 +15,8 @@ class ChatCRUD extends ChangeNotifier {
 
   Stream<List<Chat>> getChats() {
     return _api.streamDataCollection().map(
-          (snapshot) => snapshot.documents
-              .map((document) => Chat.fromJson(document.data))
+          (snapshot) => snapshot.docs
+              .map((document) => Chat.fromJson(document.data()))
               .toList(),
         );
   }
@@ -25,13 +24,13 @@ class ChatCRUD extends ChangeNotifier {
   Stream<List<Message>> getChatMessages(String chatId) {
     return _api
         .getCollectionRef()
-        .document(chatId)
+        .doc(chatId)
         .collection('messages')
         .orderBy('dateCreated')
         .snapshots()
         .map(
-          (snapshot) => snapshot.documents
-              .map((document) => Message.fromJson(document.data))
+          (snapshot) => snapshot.docs
+              .map((document) => Message.fromJson(document.data()))
               .toList(),
         );
   }
@@ -42,7 +41,7 @@ class ChatCRUD extends ChangeNotifier {
 
   Future<Chat> getChatById(String id) async {
     var doc = await _api.getDocumentById(id);
-    return Chat.fromJson(doc.data);
+    return Chat.fromJson(doc.data());
   }
 
   Future removeChat(String id) async {
@@ -58,10 +57,10 @@ class ChatCRUD extends ChangeNotifier {
   Future updateChatMessage(Chat chat, Message message) async {
     await _api
         .getCollectionRef()
-        .document(chat.id)
+        .doc(chat.id)
         .collection('messages')
-        .document(message.id)
-        .updateData(message.toJson());
+        .doc(message.id)
+        .update(message.toJson());
     return;
   }
 
@@ -69,8 +68,8 @@ class ChatCRUD extends ChangeNotifier {
     await _api
         .addDocument(data.toJson())
         .then((result) => {
-              data.id = result.documentID,
-              result.setData({'id': data.id}, merge: true)
+              data.id = result.id,
+              result.set({'id': data.id}, SetOptions(merge: true))
             })
         .catchError((e) => {print(e.message)});
     return data;
@@ -79,12 +78,12 @@ class ChatCRUD extends ChangeNotifier {
   Future<Message> addMessage(Chat chat, Message data) async {
     await _api
         .getCollectionRef()
-        .document(chat.id)
+        .doc(chat.id)
         .collection('messages')
         .add(data.toJson())
         .then((result) => {
-              data.id = result.documentID,
-              result.setData({'id': data.id}, merge: true)
+              data.id = result.id,
+              result.set({'id': data.id}, SetOptions(merge: true))
             })
         .catchError((e) => {print(e.message)});
     return data;

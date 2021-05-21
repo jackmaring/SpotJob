@@ -47,6 +47,7 @@ class Message {
   String content;
   MessageType messageType;
   MessageStatus messageStatus;
+  String chatId;
   Timestamp dateCreated;
 
   Message({
@@ -55,6 +56,7 @@ class Message {
     this.content,
     this.messageType,
     this.messageStatus,
+    this.chatId,
     this.dateCreated,
   });
 
@@ -65,6 +67,7 @@ class Message {
           content: data['content'],
           messageType: _stringToMessageType(data['messageType']),
           messageStatus: _stringToMessageStatus(data['messageStatus']),
+          chatId: data['chatId'],
           dateCreated: data['dateCreated'],
         );
 
@@ -74,6 +77,7 @@ class Message {
         'content': content,
         'messageType': _messageTypeToString(messageType),
         'messageStatus': _messageStatusToString(messageStatus),
+        'chatId': chatId,
         'dateCreated': dateCreated,
       };
 

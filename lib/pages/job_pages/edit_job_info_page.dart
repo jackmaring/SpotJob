@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotjob/models/job.dart';
-import 'package:spotjob/pages/tabs_pages/tabs_page.dart';
 import 'package:spotjob/providers/create_job.dart';
 import 'package:spotjob/services/crud_models/job_crud_model.dart';
 import 'package:spotjob/services/update_methods/job_update_methods.dart';
@@ -27,6 +26,7 @@ class EditJobInfoPage extends StatefulWidget {
 
 class _EditJobInfoPageState extends State<EditJobInfoPage> {
   final jobCrud = JobCRUD();
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
@@ -52,6 +52,16 @@ class _EditJobInfoPageState extends State<EditJobInfoPage> {
   }
 
   @override
+  void dispose() {
+    titleController.dispose();
+    descController.dispose();
+    priceController.dispose();
+    addressController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Job relevantJob = ModalRoute.of(context).settings.arguments;
     final createJobProvider = Provider.of<CreateJob>(context);
@@ -73,51 +83,53 @@ class _EditJobInfoPageState extends State<EditJobInfoPage> {
                   BigText('EDIT JOB'),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: 32),
-                        AddJobTitle(titleController),
-                        SizedBox(height: 32),
-                        AddJobDescription(descController),
-                        // SizedBox(height: 32),
-                        // SelectPayType(),
-                        SizedBox(height: 32),
-                        AddJobPrice(priceController),
-                        SizedBox(height: 32),
-                        SelectLocationType(),
-                        AddJobAddress(addressController),
-                        // SizedBox(height: 32),
-                        // AddJobNumOfPeople(numOfPeopleController),
-                        SizedBox(height: 32),
-                        AddJobTags(),
-                        SizedBox(height: 32),
-                        LongBlueButton(
-                          text: 'Edit Job',
-                          onTap: () async {
-                            Job updatedJob =
-                                await JobUpdateMethods.updateJobInfo(
-                              createJobProvider,
-                              relevantJob,
-                            );
-                            createJobProvider.updatedJob = updatedJob;
-                            Navigator.pop(context);
-                          },
-                        ),
-                        LongWhiteButton(
-                          text: 'Delete Job',
-                          onTap: () {
-                            JobUpdateMethods.deleteJob(
-                              createJobProvider,
-                              currentUserDoc,
-                              relevantJob,
-                            );
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, TabsPage.routeName, (route) => false);
-                          },
-                        ),
-                        SizedBox(height: 48),
-                      ],
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 32),
+                          AddJobTitle(titleController: titleController),
+                          SizedBox(height: 32),
+                          AddJobDescription(descController: descController),
+                          // SizedBox(height: 32),
+                          // SelectPayType(),
+                          SizedBox(height: 32),
+                          AddJobPrice(priceController: priceController),
+                          SizedBox(height: 32),
+                          SelectLocationType(),
+                          AddJobAddress(addressController: addressController),
+                          // SizedBox(height: 32),
+                          // AddJobNumOfPeople(numOfPeopleController),
+                          SizedBox(height: 32),
+                          AddJobTags(),
+                          SizedBox(height: 32),
+                          LongBlueButton(
+                            text: 'Edit Job',
+                            onTap: () {
+                              if (_formKey.currentState.validate()) {
+                                JobUpdateMethods.editJob(
+                                  context,
+                                  createJobProvider,
+                                  relevantJob,
+                                );
+                              }
+                            },
+                          ),
+                          LongWhiteButton(
+                            text: 'Delete Job',
+                            onTap: () {
+                              JobUpdateMethods.deleteJob(
+                                context,
+                                createJobProvider,
+                                currentUserDoc,
+                                relevantJob,
+                              );
+                            },
+                          ),
+                          SizedBox(height: 48),
+                        ],
+                      ),
                     ),
                   ),
                 ],

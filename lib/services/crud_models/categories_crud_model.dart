@@ -1,24 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 import 'package:spotjob/models/category.dart';
 import 'package:spotjob/services/firestore_api.dart';
 
-class CategoryCRUD extends ChangeNotifier {
+class CategoryCRUD {
   FirestoreApi _api = FirestoreApi('/categories');
 
   List<Category> categories;
 
   Future<List<Category>> fetchCategories() async {
     var result = await _api.getDataCollection();
-    categories = result.documents.map((doc) => Category.fromJson(doc.data)).toList();
+    categories =
+        result.docs.map((doc) => Category.fromJson(doc.data())).toList();
     return categories;
   }
 
   Stream<List<Category>> getCategories() {
-    return _api.streamDataCollection().map((snapshot) => snapshot.documents
-        .map((document) => Category.fromJson(document.data))
-        .toList());
+    return _api.streamDataCollection().map((snapshot) =>
+        snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
   }
 
   Stream<QuerySnapshot> fetchCategoriesAsStream() {
@@ -27,7 +26,7 @@ class CategoryCRUD extends ChangeNotifier {
 
   Future<Category> getCategoryById(String id) async {
     var doc = await _api.getDocumentById(id);
-    return Category.fromJson(doc.data);
+    return Category.fromJson(doc.data());
   }
 
   Future removeCategory(String id) async {

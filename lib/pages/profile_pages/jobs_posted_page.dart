@@ -13,8 +13,10 @@ class JobsPostedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User relevantUser = ModalRoute.of(context).settings.arguments;
-    final List<Job> jobsPosted =
-        UserTopMethods.getUserJobsPosted(context, relevantUser);
+    final List<Job> completedJobsPosted =
+        UserTopMethods.getUserCompletedJobsPosted(context, relevantUser);
+    final List<Job> uncompletedJobsPosted =
+        UserTopMethods.getUserUncompletedJobsPosted(context, relevantUser);
 
     String _searchQuery;
 
@@ -49,13 +51,52 @@ class JobsPostedPage extends StatelessWidget {
                     _searchQuery = value;
                   },
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 32),
                 Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) => JobListTile(
-                      jobDetails: jobsPosted[index],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, bottom: 16),
+                          child: Text(
+                            'UNCOMPLETED (${uncompletedJobsPosted.length})',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                        ),
+
+                        // Expanded(
+                        //   child:
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => JobListTile(
+                            jobDetails: uncompletedJobsPosted[index],
+                          ),
+                          itemCount: uncompletedJobsPosted.length,
+                        ),
+                        // ),
+                        // SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, bottom: 16),
+                          child: Text(
+                            'COMPLETED (${completedJobsPosted.length})',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                        ),
+                        // Expanded(
+                        //   child:
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => JobListTile(
+                            jobDetails: completedJobsPosted[index],
+                          ),
+                          itemCount: completedJobsPosted.length,
+                        ),
+                        // ),
+                      ],
                     ),
-                    itemCount: jobsPosted.length,
                   ),
                 ),
               ],

@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 import 'package:spotjob/models/user.dart';
 import 'package:spotjob/services/firestore_api.dart';
 
-class UserCRUD extends ChangeNotifier {
+class UserCRUD {
   FirestoreApi _api = FirestoreApi('/users');
 
   // Future<List<User>> fetchUsers() async {
@@ -15,8 +14,8 @@ class UserCRUD extends ChangeNotifier {
   // }
 
   Stream<List<User>> getUsers() {
-    return _api.streamDataCollection().map((snapshot) => snapshot.documents
-        .map((document) => User.fromJson(document.data))
+    return _api.streamDataCollection().map((snapshot) => snapshot.docs
+        .map((document) => User.fromJson(document.data()))
         .toList());
   }
 
@@ -26,7 +25,7 @@ class UserCRUD extends ChangeNotifier {
 
   Future<User> getUserById(String id) async {
     var doc = await _api.getDocumentById(id);
-    return User.fromJson(doc.data);
+    return User.fromJson(doc.data());
   }
 
   Future removeUser(String id) async {
@@ -43,8 +42,8 @@ class UserCRUD extends ChangeNotifier {
     await _api
         .addDocument(data.toJson())
         .then((result) => {
-              data.id = result.documentID,
-              result.setData({'id': data.id}, merge: true)
+              data.id = result.id,
+              result.set({'id': data.id}, SetOptions(merge: true))
             })
         .catchError((e) => {print(e.message)});
     return;

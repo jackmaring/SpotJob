@@ -10,16 +10,11 @@ import 'package:spotjob/services/crud_models/chat_crud_model.dart';
 import 'package:spotjob/services/update_methods/chat_update_methods.dart';
 import 'package:spotjob/utils/top_methods/chat_top_methods.dart';
 import 'package:spotjob/utils/top_methods/user_top_methods.dart';
+import 'package:spotjob/utils/useful_methods.dart';
 import 'package:spotjob/widgets/common/notification_bubble.dart';
 
 class MessagePreviewList extends StatelessWidget {
   final ChatCRUD chatCrud = ChatCRUD();
-
-  String truncateWithEllipsis(int cutoff, String myString) {
-    return (myString.length <= cutoff)
-        ? myString
-        : '${myString.substring(0, cutoff)}...';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +81,8 @@ class MessagePreviewList extends StatelessWidget {
                                 style: Theme.of(context).textTheme.headline5,
                               ),
                               subtitle: Text(
-                                truncateWithEllipsis(20, lastMessage.content),
+                                UsefulMethods.truncateWithEllipsis(
+                                    20, lastMessage.content),
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
                               trailing: Row(

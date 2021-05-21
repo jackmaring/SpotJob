@@ -1,13 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotjob/models/job.dart';
+import 'package:spotjob/models/sj_notification.dart';
 import 'package:spotjob/models/user.dart';
 
 class UserTopMethods {
   static User getCurrentUserDoc(BuildContext context) {
-    final currentUser = Provider.of<FirebaseUser>(context);
+    final currentUser = Provider.of<auth.User>(context);
     final List<User> users = Provider.of<List<User>>(context);
     User currentUserDoc;
 
@@ -35,6 +36,17 @@ class UserTopMethods {
 
     if (users != null) {
       foundUser = users.singleWhere((u) => u.id == userId);
+    }
+
+    return foundUser;
+  }
+
+  static User getUserByUid(BuildContext context, String userUid) {
+    final List<User> users = Provider.of<List<User>>(context, listen: false);
+    User foundUser;
+
+    if (users != null) {
+      foundUser = users.singleWhere((u) => u.uid == userUid);
     }
 
     return foundUser;
@@ -145,5 +157,20 @@ class UserTopMethods {
     }
 
     return completedJobsPosted;
+  }
+
+  static List<SJNotification> getUserSJNotifications(
+      BuildContext context, User user) {
+    final List<SJNotification> sjnotifications =
+        Provider.of<List<SJNotification>>(context);
+    List<SJNotification> userSJNotifications;
+
+    if (sjnotifications != null) {
+      userSJNotifications = sjnotifications
+          .where((notif) => notif.receiverId == user.id)
+          .toList();
+    }
+
+    return userSJNotifications;
   }
 }

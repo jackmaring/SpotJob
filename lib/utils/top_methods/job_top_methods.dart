@@ -1,10 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotjob/models/job.dart';
 import 'package:spotjob/models/user.dart';
 import 'package:spotjob/providers/change_category.dart';
+import 'package:spotjob/utils/top_methods/user_top_methods.dart';
 
 class JobTopMethods {
   static List<User> getSavedUsersOfJob(BuildContext context, Job job) {
@@ -32,7 +33,7 @@ class JobTopMethods {
   }
 
   static User getJobTakerInProgress(BuildContext context, Job job) {
-    final currentUser = Provider.of<FirebaseUser>(context, listen: false);
+    final currentUser = Provider.of<auth.User>(context, listen: false);
     final List<User> takeRequesters = getAppliedUsersOfJob(context, job);
     User jobTakerInProgress;
 
@@ -69,7 +70,7 @@ class JobTopMethods {
   static List<Job> getFilteredJobs(
       BuildContext context, ChangeCategory changeCategory) {
     final availableJobs = getAvailableJobs(context);
-    List<Job> filteredJobs;
+    List<Job> filteredJobs = [];
 
     if (availableJobs != null) {
       if (changeCategory.currentCategory != null) {
@@ -80,12 +81,32 @@ class JobTopMethods {
                     .any((subcategory) => job.tags.contains(subcategory)))
             .toList();
         if (changeCategory.currentSubcategory != null) {
-          filteredJobs = availableJobs
+          filteredJobs = filteredJobs
               .where(
                   (job) => job.tags.contains(changeCategory.currentSubcategory))
               .toList();
         }
       }
+      // if (query != null) {
+      //   print('in query statement');
+      //   filteredJobs = filteredJobs.where((job) {
+      //     User posterUser = UserTopMethods.getUserByUid(context, job.uid);
+      //     bool isInQuery = false;
+      //     print('asdfasdf');
+      //     if (posterUser != null) {
+      //       if (job.title.contains(query) ||
+      //           posterUser.name.contains(query) ||
+      //           posterUser.username.contains(query)) {
+      //         print('is true');
+      //         isInQuery = true;
+      //       } else {
+      //         print('is false');
+      //         isInQuery = false;
+      //       }
+      //     }
+      //     return isInQuery;
+      //   }).toList();
+      // }
     }
 
     return filteredJobs;
@@ -119,6 +140,14 @@ class JobTopMethods {
                 .toList();
           }
         }
+        // if (query != null && query.isNotEmpty) {
+        //   customFilteredJobs = customFilteredJobs.where((job) {
+        //     User posterUser = UserTopMethods.getUserByUid(context, job.uid);
+        //     return job.title.contains(query) ||
+        //         posterUser.name.contains(query) ||
+        //         posterUser.username.contains(query);
+        //   });
+        // }
       }
     }
 

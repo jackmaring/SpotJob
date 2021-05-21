@@ -6,7 +6,7 @@ import 'package:spotjob/providers/create_job.dart';
 class AddJobDescription extends StatelessWidget {
   final TextEditingController descController;
 
-  AddJobDescription(this.descController);
+  AddJobDescription({this.descController});
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +20,20 @@ class AddJobDescription extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
-          child: TextField(
-            controller: descController..text = job.descText,
+          child: TextFormField(
+            controller: descController,
             onChanged: (value) {
               job.descText = value;
             },
             style: Theme.of(context).textTheme.headline5,
             keyboardType: TextInputType.multiline,
             maxLines: 3,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Description required';
+              }
+              return null;
+            },
           ),
         ),
       ],

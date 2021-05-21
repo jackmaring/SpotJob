@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +36,7 @@ class _EditProfileInfoPageState extends State<EditProfileInfoPage> {
     Future.delayed(Duration.zero, () {
       final createUserProvider =
           Provider.of<CreateUser>(context, listen: false);
-      final currentUser = Provider.of<FirebaseUser>(context, listen: false);
+      final currentUser = Provider.of<auth.User>(context, listen: false);
       final List<User> users = Provider.of<List<User>>(context, listen: false);
       User currentUserDoc;
 
@@ -95,14 +95,12 @@ class _EditProfileInfoPageState extends State<EditProfileInfoPage> {
                         SizedBox(height: 32),
                         LongBlueButton(
                           text: 'Edit Profile',
-                          onTap: () async {
-                            User updatedUser =
-                                await UserUpdateMethods.editUserProfile(
+                          onTap: () {
+                            UserUpdateMethods.updateProfile(
+                              context,
                               createUserProvider,
                               currentUserDoc,
                             );
-                            createUserProvider.updatedUser = updatedUser;
-                            Navigator.pop(context);
                           },
                         ),
                         SizedBox(height: 48),

@@ -1,4 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -6,8 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:spotjob/models/category.dart';
 import 'package:spotjob/models/chat.dart';
 import 'package:spotjob/models/job.dart';
+import 'package:spotjob/models/sj_notification.dart';
 import 'package:spotjob/models/user.dart';
 import 'package:spotjob/pages/home_pages/filter_page.dart';
+import 'package:spotjob/pages/home_pages/notifications_page.dart';
+import 'package:spotjob/pages/home_pages/settings_page.dart';
 import 'package:spotjob/pages/job_pages/edit_job_info_page.dart';
 import 'package:spotjob/pages/job_pages/job_info_page.dart';
 import 'package:spotjob/pages/job_pages/new_job_page.dart';
@@ -30,10 +34,15 @@ import 'package:spotjob/providers/settings.dart';
 import 'package:spotjob/services/crud_models/categories_crud_model.dart';
 import 'package:spotjob/services/crud_models/chat_crud_model.dart';
 import 'package:spotjob/services/crud_models/job_crud_model.dart';
+import 'package:spotjob/services/crud_models/sjnotification_crud_model.dart';
 import 'package:spotjob/services/crud_models/user_crud_model.dart';
 import 'package:spotjob/styles/custom_colors.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -42,11 +51,12 @@ class MyApp extends StatelessWidget {
     final UserCRUD userCrud = UserCRUD();
     final ChatCRUD chatCrud = ChatCRUD();
     final CategoryCRUD categoryCrud = CategoryCRUD();
-    
+    final SJNotificationCRUD sjnotificationCrud = SJNotificationCRUD();
+
     return MultiProvider(
       providers: [
-        StreamProvider<FirebaseUser>.value(
-          value: FirebaseAuth.instance.onAuthStateChanged,
+        StreamProvider<auth.User>.value(
+          value: auth.FirebaseAuth.instance.authStateChanges(),
         ),
         StreamProvider<List<Job>>(
           create: (_) => jobCrud.getJobs(),
@@ -59,6 +69,9 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider<List<Chat>>(
           create: (_) => chatCrud.getChats(),
+        ),
+        StreamProvider<List<SJNotification>>(
+          create: (_) => sjnotificationCrud.getSJNotifications(),
         ),
         ChangeNotifierProvider(
           create: (_) => CreateJob(),
@@ -242,6 +255,18 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
               break;
+            case NotificationsPage.routeName:
+              return PageTransition(
+                child: NotificationsPage(),
+                type: PageTransitionType.fade,
+              );
+              break;
+            case SettingsPage.routeName:
+              return PageTransition(
+                child: SettingsPage(),
+                type: PageTransitionType.fade,
+              );
+              break;  
             default:
               return null;
           }

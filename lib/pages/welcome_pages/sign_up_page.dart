@@ -186,8 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     buttonText: 'Sign up',
                                     onTap: () {
                                       if (_formKey.currentState.validate()) {
-                                        AuthService()
-                                            .signUp(_email, _password)
+                                        AuthService.signUp(_email, _password)
                                             .then((uid) {
                                           UserUpdateMethods.createUser(
                                             uid,

@@ -67,16 +67,21 @@ class ProfilePage extends StatelessWidget {
                         ),
                       )
                     : Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.more_vert,
-                            size: 30,
-                            color: CustomColors.darkGray,
-                          ),
-                          onPressed: () => Scaffold.of(context).openEndDrawer(),
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Builder(
+                          builder: (context) {
+                            return IconButton(
+                              icon: Icon(
+                                Icons.more_vert,
+                                size: 30,
+                                color: CustomColors.darkGray,
+                              ),
+                              onPressed: () =>
+                                  Scaffold.of(context).openEndDrawer(),
+                            );
+                          },
                         ),
-                    )
+                      ),
               ],
             ),
             endDrawer: ProfileDrawer(relevantUser, currentUserDoc),
